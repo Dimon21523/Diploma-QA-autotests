@@ -1,6 +1,7 @@
 pytest
 selenium
+webdriver-manager
 requests
 allure-pytest
-webdriver-manager
+python-dotenv
 flake8

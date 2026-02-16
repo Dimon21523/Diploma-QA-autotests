@@ -1,16 +1,29 @@
 import pytest
 from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.options import Options
+
+from api.client import ApiClient
+from config import API_BASE_URL, API_TOKEN
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture
 def driver():
-    service = Service(ChromeDriverManager().install())
-    browser = webdriver.Chrome(service=service)
-    browser.maximize_window()
-    browser.implicitly_wait(10)
+    options = Options()
+    options.add_argument("--start-maximized")
 
-    yield browser
+    driver = webdriver.Chrome(options=options)
 
-    browser.quit()
+    driver.delete_all_cookies()
+
+    yield driver
+
+    driver.quit()
+
+
+@pytest.fixture
+def api_client() -> ApiClient:
+    if not API_BASE_URL:
+        pytest.skip("Нет API_BASE_URL в .env")
+    if not API_TOKEN:
+        pytest.skip("Нет API_TOKEN в .env")
+    return ApiClient(base_url=API_BASE_URL, token=API_TOKEN)

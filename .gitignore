@@ -6,3 +6,4 @@ __pycache__/
 *.log
 allure-report/
 allure-results/
+.env
